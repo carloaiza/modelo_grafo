@@ -7,9 +7,12 @@ package com.grafo.prueba;
 
 import com.grafo.modelo.Arista;
 import com.grafo.modelo.Grafo;
+import com.grafo.modelo.GrafoDirigido;
+import com.grafo.modelo.GrafoNoDirigido;
 import com.grafo.modelo.excepcion.GrafoExcepcion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  *
@@ -23,26 +26,22 @@ public class PruebaGrafo {
         Ciudad pereira= new Ciudad("63001","Pereira");
         Ciudad chinchina= new Ciudad("17003","Chinchiná");
         
-        Grafo grafoCiudades = new Grafo(false);
+        Grafo grafoCiudades = new GrafoDirigido();
         grafoCiudades.adicionarVertice(manizales);
         grafoCiudades.adicionarVertice(pereira);
         grafoCiudades.adicionarVertice(chinchina);
         
         try {
-            grafoCiudades.adicionarArista(new Arista((short)1, 
-                    (short)3, (short)20));
-            grafoCiudades.adicionarArista(new Arista((short)1, 
-                    (short)2, (short)46));
-            grafoCiudades.adicionarArista(new Arista((short)1, 
-                    (short)2, (short)46));
+            grafoCiudades.adicionarArista(new Arista(1, 
+                    3, (short)20));
+            grafoCiudades.adicionarArista(new Arista(1, 
+                    2, (short)46));
+            grafoCiudades.adicionarArista(new Arista(2, 
+                    1, (short)46));
             
         } catch (GrafoExcepcion ex) {
             System.out.println("ex = " + ex.getMessage()); 
         }
-        
-        
-        
-        
         
     }
 }

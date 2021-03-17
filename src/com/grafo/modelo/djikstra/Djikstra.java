@@ -5,6 +5,7 @@
  */
 package com.grafo.modelo.djikstra;
 
+import com.grafo.modelo.Arista;
 import com.grafo.modelo.Grafo;
 import com.grafo.modelo.Vertice;
 import java.io.Serializable;
@@ -48,18 +49,48 @@ public class Djikstra implements Serializable{
         VerticeDjikstra vertActual;
         //1. Pararme en el origen
         vertActual= obtenerVerticexCodigo(origen);
-        // null y peso 0
+        // null y peso 0        
+        /*        
+        2. Asigno de donde viene y peso acumulado  (Faltante)      
+        3. obtengo las adyancencias del vertice en el que estoy
+        (Diferente si el grafo es dirigido o no dirigido
+        */
+        List<Arista> adyacencias = grafo.obtenerAdyacencias(vertActual.getCodigo());        
         /*
-        
-        2. Asigno de donde viene y peso acumulado
-        3. obtengo las adyancencias
-        4. Visito todas las adyancencias 
+        4. Visito todas las adyancencias        
         5. Cada adyacencia actualizo su origen y peso acumulado
            cuando es menor
-        6. Marco en el que estoy parado            
-           verificar si ya todos estan marcados (Finishing) voy al punto 8
-            cuando todos vertcesD esten marcado - marcados = verticesD.size()
-        7. Salto a la adyacencia menor no marcada
+        */
+        for(Arista ari:adyacencias)
+        {
+            VerticeDjikstra visitado= obtenerVerticexCodigo(ari.getDestino());
+            //Actualizarle su origne y peso
+            if(visitado.getAnterior()==null)
+            {
+                //NO ha sido visitado
+                visitado.setAnterior(vertActual);
+                visitado.setPeso((vertActual.getPeso()+ari.getPeso()));
+                
+            }
+            else
+            {
+                short pesoAcumulado=(short)(vertActual.getPeso()+ari.getPeso());
+                if(pesoAcumulado < visitado.getPeso())
+                {
+                    visitado.setAnterior(vertActual);
+                    visitado.setPeso(pesoAcumulado);
+                }
+            }
+        }
+        /*
+        6.  a) Marco en el que estoy parado            
+             b)verificar si ya todos estan marcados (Finishing) voy al punto 8
+            cuando todos vertcesD esten marcado - marcados = verticesD.size() (Faltante)
+        */
+        vertActual.setMarcado(true);
+        
+        /*
+        7. Salto a la adyacencia menor no marcada        
         
         8. Sacar la ruta - Me paro en el destino y empiezo a devolverme
         */
@@ -89,7 +120,7 @@ public class Djikstra implements Serializable{
     }
     
     
-    public VerticeDjikstra obtenerVerticexCodigo(short codigo)
+    public VerticeDjikstra obtenerVerticexCodigo(int codigo)
     {
         // Objetos son referencias en memoria        
         for(VerticeDjikstra vertD:verticesD)
@@ -102,11 +133,21 @@ public class Djikstra implements Serializable{
         return null;
     }
     
-    private void actualizarAdyacencias(int codigo)
+    private void actualizarAdyacencias(VerticeDjikstra actual)
     {
-        //Obtener las adayacencias de verticesD 
+        //Obtener las adyacencias de verticesD 
         //recorriendo las aristas del grafo
+        // actualizo los pesos y anterior de las adyacencias
+        // si esta nulo el anterior actualizo el anterior con el vertice
+        //actual
+        // si no esta nulo comparo si es menor el peso acumulado para
+        //actualizar
     }
    
+    
+    private VerticeDjikstra obtenerAdyacenciaMenorNoVisitada(List<Arista> adyacencias)
+    {
+        return null;
+    }
     
 }

@@ -14,23 +14,22 @@ import java.util.List;
  */
 public class VerticeDjikstra implements Serializable{
     
-    private short codigo;
+    private int codigo;
     private VerticeDjikstra anterior;
     private short peso;
-    private boolean marcado;
-    private List<VerticeDjikstra> adyacencias;
+    private boolean marcado;    
 
-    public VerticeDjikstra(short codigo, VerticeDjikstra anterior, short peso) {
+    public VerticeDjikstra(int codigo, VerticeDjikstra anterior, short peso) {
         this.codigo = codigo;
         this.anterior = anterior;
         this.peso = peso;
     }
 
-    public short getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(short codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
@@ -56,14 +55,6 @@ public class VerticeDjikstra implements Serializable{
 
     public void setMarcado(boolean marcado) {
         this.marcado = marcado;
-    }
-
-    public List<VerticeDjikstra> getAdyacencias() {
-        return adyacencias;
-    }
-
-    public void setAdyacencias(List<VerticeDjikstra> adyacencias) {
-        this.adyacencias = adyacencias;
     }
 
     

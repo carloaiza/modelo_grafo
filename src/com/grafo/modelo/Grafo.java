@@ -14,14 +14,12 @@ import java.util.List;
  *
  * @author carloaiza
  */
-public class Grafo implements Serializable {
+public abstract class Grafo implements Serializable {
     private List<Vertice> vertices;
-    private List<Arista> aristas;
-    private boolean dirigido;
+    private List<Arista> aristas;    
     private short consecutivo;
 
-    public Grafo(boolean dirigido) {
-        this.dirigido = dirigido;
+    public Grafo() {        
         this.vertices= new ArrayList<>();
         this.aristas= new ArrayList<>();
     }
@@ -41,14 +39,7 @@ public class Grafo implements Serializable {
     public void setAristas(List<Arista> arista) {
         this.aristas = arista;
     }
-
-    public boolean isDirigido() {
-        return dirigido;
-    }
-
-    public void setDirigido(boolean dirigido) {
-        this.dirigido = dirigido;
-    }
+    
 
     public short getConsecutivo() {
         return consecutivo;
@@ -74,18 +65,9 @@ public class Grafo implements Serializable {
         aristas.add(arista);
     }
     
-    public boolean validarExistenciaArista(Arista arista)
-    {
-        //List<Arista> aristasOrigen= new ArrayList<>();        
-        for(Arista ari:this.aristas)
-        {
-            if(ari.equals(arista))
-            {
-                return true;
-            }
-        }        
-        return false;
-    }  
+    public abstract boolean  validarExistenciaArista(Arista arista);
+    
+    public abstract List<Arista> obtenerAdyacencias(int origen);
     
     
 }

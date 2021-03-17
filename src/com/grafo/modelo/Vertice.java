@@ -13,9 +13,9 @@ import java.io.Serializable;
  */
 public class Vertice implements Serializable {
     private Object dato;
-    private short codigo;
+    private int codigo;
 
-    public Vertice(Object dato, short codigo) {
+    public Vertice(Object dato, int codigo) {
         this.dato = dato;
         this.codigo = codigo;
     }
@@ -28,11 +28,11 @@ public class Vertice implements Serializable {
         this.dato = dato;
     }
 
-    public short getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(short codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 

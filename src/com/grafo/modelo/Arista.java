@@ -14,9 +14,9 @@ import java.io.Serializable;
 public class Arista implements Serializable{
    private int origen;
    private int destino;
-   private int peso;
+   private short peso;
 
-    public Arista(int origen, int destino, int peso) {
+    public Arista(int origen, int destino, short peso) {
         this.origen = origen;
         this.destino = destino;
         this.peso = peso;
@@ -38,11 +38,11 @@ public class Arista implements Serializable{
         this.destino = destino;
     }
 
-    public int getPeso() {
+    public short getPeso() {
         return peso;
     }
 
-    public void setPeso(int peso) {
+    public void setPeso(short peso) {
         this.peso = peso;
     }
 
@@ -50,25 +50,6 @@ public class Arista implements Serializable{
     public String toString() {
         return "Arista{" + "origen=" + origen + ", destino=" + destino + ", peso=" + peso + '}';
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof Arista)
-        {            
-            if( ((Arista) obj).getOrigen() == origen 
-                    && ((Arista) obj).getDestino() == destino 
-                    && ((Arista) obj).getPeso()== peso)
-            {
-                return true;
-            }            
-        }
-        return false;
-    }
-    
-    
-    
-  
-   
    
    
 }
