@@ -7,6 +7,7 @@ package com.grafo.modelo.djikstra;
 
 import com.grafo.modelo.Arista;
 import com.grafo.modelo.Grafo;
+import com.grafo.modelo.GrafoDirigido;
 import com.grafo.modelo.Vertice;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
  *
  * @author carloaiza
  */
+
 public class Djikstra implements Serializable{
     private short origen;
     private short destino;
@@ -49,9 +51,19 @@ public class Djikstra implements Serializable{
         VerticeDjikstra vertActual;
         //1. Pararme en el origen
         vertActual= obtenerVerticexCodigo(origen);
-        // null y peso 0        
+        // null y peso 0                       
+        calcularDjikstra(vertActual);
+        
+        //Se si tengo o no ruta
+        return null;
+    }
+    
+    private void calcularDjikstra(VerticeDjikstra vertActual)
+    {
         /*        
-        2. Asigno de donde viene y peso acumulado  (Faltante)      
+        2. Asigno de donde viene y peso acumulado  (Faltante)
+       
+        /*
         3. obtengo las adyancencias del vertice en el que estoy
         (Diferente si el grafo es dirigido o no dirigido
         */
@@ -61,42 +73,33 @@ public class Djikstra implements Serializable{
         5. Cada adyacencia actualizo su origen y peso acumulado
            cuando es menor
         */
-        for(Arista ari:adyacencias)
-        {
-            VerticeDjikstra visitado= obtenerVerticexCodigo(ari.getDestino());
-            //Actualizarle su origne y peso
-            if(visitado.getAnterior()==null)
-            {
-                //NO ha sido visitado
-                visitado.setAnterior(vertActual);
-                visitado.setPeso((vertActual.getPeso()+ari.getPeso()));
-                
-            }
-            else
-            {
-                short pesoAcumulado=(short)(vertActual.getPeso()+ari.getPeso());
-                if(pesoAcumulado < visitado.getPeso())
-                {
-                    visitado.setAnterior(vertActual);
-                    visitado.setPeso(pesoAcumulado);
-                }
-            }
-        }
+        actualizarAdyacencias(vertActual, adyacencias);
         /*
         6.  a) Marco en el que estoy parado            
              b)verificar si ya todos estan marcados (Finishing) voy al punto 8
             cuando todos vertcesD esten marcado - marcados = verticesD.size() (Faltante)
         */
         vertActual.setMarcado(true);
+        this.marcados++;
+        if(marcados == grafo.getVertices().size())
+        {
+            //8. Sacar la ruta - Me paro en el destino y empiezo a devolverme
+            //Se para en el destino  lee el anterior y hace hasta que llegue al origen
+            //Construye la ruta
+            
+        }
+        else
+        {
+            /*
+            7. Salto a la adyacencia menor no marcada
+            volver al 2            
+            */
+            VerticeDjikstra vertMenorNoVisitado= 
+                    obtenerAdyacenciaMenorNoVisitada(adyacencias, vertActual);
+            calcularDjikstra(vertMenorNoVisitado);
+            
+        }
         
-        /*
-        7. Salto a la adyacencia menor no marcada        
-        
-        8. Sacar la ruta - Me paro en el destino y empiezo a devolverme
-        */
-        
-        
-        return null;
     }
 
     public short getOrigen() {
@@ -133,7 +136,7 @@ public class Djikstra implements Serializable{
         return null;
     }
     
-    private void actualizarAdyacencias(VerticeDjikstra actual)
+    private void actualizarAdyacencias(VerticeDjikstra vertActual, List<Arista> adyacencias)
     {
         //Obtener las adyacencias de verticesD 
         //recorriendo las aristas del grafo
@@ -142,12 +145,84 @@ public class Djikstra implements Serializable{
         //actual
         // si no esta nulo comparo si es menor el peso acumulado para
         //actualizar
+        for(Arista ari:adyacencias)
+        {
+            VerticeDjikstra visitado= obtenerVerticexCodigo(ari.getDestino());
+            //Actualizarle su origen y peso
+            if(visitado.getAnterior()==null)
+            {
+                //NO ha sido visitado
+                visitado.setAnterior(vertActual);
+                visitado.setPeso((short)(vertActual.getPeso()+ari.getPeso()));                
+            }
+            else
+            {
+                short pesoAcumulado=(short)(vertActual.getPeso()+ari.getPeso());
+                if(pesoAcumulado < visitado.getPeso())
+                {
+                    visitado.setAnterior(vertActual);
+                    visitado.setPeso(pesoAcumulado);
+                }
+            }
+        }
+        
     }
    
     
-    private VerticeDjikstra obtenerAdyacenciaMenorNoVisitada(List<Arista> adyacencias)
+    private VerticeDjikstra obtenerAdyacenciaMenorNoVisitada(List<Arista> adyacencias,
+            VerticeDjikstra anterior)
     {
-        return null;
+        //Menor peso acumulado
+        // cuando dos vertices tienen el mismo salta a cualquiera
+        short menor= Short.MAX_VALUE;
+        VerticeDjikstra verticeSalto =null;
+        for(Arista ari: adyacencias)
+        {
+            int codigoVerticeAnalizar=0;
+            //Si mi grafo es dirigido a no es dirigido
+            if(grafo instanceof GrafoDirigido)
+            {
+                //Siempre voy a obtener el vertice que voy a analizar con el destino
+                codigoVerticeAnalizar= ari.getOrigen();
+            }
+            else
+            {    
+                // Yo tengo que determinar si debo buscar el vertice a analizar con el 
+                // origen de la arista o con el destino
+                codigoVerticeAnalizar= ari.getOrigen();
+                if(ari.getOrigen()== anterior.getCodigo())
+                {
+                    codigoVerticeAnalizar= ari.getDestino();
+                }
+                
+            }
+            VerticeDjikstra vertAdyacente = obtenerVerticexCodigo(codigoVerticeAnalizar);
+           
+            if(!vertAdyacente.isMarcado()) //Me interesan los que no estén marcados
+            {
+                if(vertAdyacente.getPeso() < menor)
+                {
+                    //Actualizar el menor  y marcar ese vertice como al que debo 
+                    //saltar
+                    menor= vertAdyacente.getPeso();
+                    verticeSalto = vertAdyacente;
+                }
+            }
+            
+        }        
+        //Se puede presentar el bloqueo y hay que saltar a cualquiera
+        if(verticeSalto == null)
+        {
+            //Un bloqueo salto a cualquiera no marcado
+            for(VerticeDjikstra vertD: verticesD)
+            {
+                if(!vertD.isMarcado())
+                {
+                    return vertD;
+                }
+            }
+        }
+        return verticeSalto;
     }
     
 }
