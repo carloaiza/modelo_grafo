@@ -9,6 +9,7 @@ import com.grafo.modelo.Arista;
 import com.grafo.modelo.Grafo;
 import com.grafo.modelo.GrafoDirigido;
 import com.grafo.modelo.Vertice;
+import com.grafo.modelo.excepcion.GrafoExcepcion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Djikstra implements Serializable{
         }
     }
     
-    public List<VerticeDjikstra> calcularDjikstra()
+    public List<VerticeDjikstra> calcularDjikstra() throws GrafoExcepcion
     {
         VerticeDjikstra vertActual;
         //1. Pararme en el origen
@@ -55,7 +56,18 @@ public class Djikstra implements Serializable{
         calcularDjikstra(vertActual);
         
         //Se si tengo o no ruta
-        return null;
+        List<VerticeDjikstra> ruta = new ArrayList<>();
+        VerticeDjikstra vertDestino = obtenerVerticexCodigo(destino);
+        while(vertDestino!=null)
+        {
+            ruta.add(vertDestino);
+            vertDestino = vertDestino.getAnterior();
+        }
+        if(ruta.size()<=1)
+        {
+            throw  new GrafoExcepcion("No hay ruta ");
+        }        
+        return ruta;
     }
     
     private void calcularDjikstra(VerticeDjikstra vertActual)
@@ -81,14 +93,7 @@ public class Djikstra implements Serializable{
         */
         vertActual.setMarcado(true);
         this.marcados++;
-        if(marcados == grafo.getVertices().size())
-        {
-            //8. Sacar la ruta - Me paro en el destino y empiezo a devolverme
-            //Se para en el destino  lee el anterior y hace hasta que llegue al origen
-            //Construye la ruta
-            
-        }
-        else
+        if(marcados < grafo.getVertices().size())
         {
             /*
             7. Salto a la adyacencia menor no marcada
